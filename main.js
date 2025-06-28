@@ -379,6 +379,7 @@ function updatePlayer() {
                 drop.collected = true;
                 gameState.score += 10;
                 updateScore();
+                playWaterSound(); // Play water sound
             }
         }
     });
@@ -397,7 +398,7 @@ function updatePlayer() {
                 drop.active = false;
                 gameState.lives--;
                 updateLives();
-                
+                playErrorSound(); // Play error sound
                 if (gameState.lives <= 0) {
                     gameOver();
                 }
@@ -413,6 +414,7 @@ function updatePlayer() {
 // Player jump
 function playerJump() {
     if (gameState.gameRunning) {
+        playClickSound(); // Play click sound on jump
         if (player.onGround) {
             // Immediate jump
             player.velocityY = -player.jumpPower;
@@ -456,6 +458,7 @@ if (restartBtn) {
 
 // Update resetGame to hide game over screen and show difficulty
 function resetGame() {
+    playClickSound(); // Play click sound on restart
     // Hide game over screen
     const gameOverScreen = document.getElementById('gameOverScreen');
     gameOverScreen.style.display = 'none';
@@ -606,6 +609,7 @@ function hideDifficultyScreen() {
 function startGameWithDifficulty(difficulty) {
     setDifficulty(difficulty);
     hideDifficultyScreen();
+    playClickSound(); // Play click sound on difficulty select
     
     // Reset game state without showing difficulty screen again
     gameState = {
@@ -651,6 +655,7 @@ function setupDifficultyButtons() {
     const difficultyButtons = document.querySelectorAll('.difficultyBtn');
     difficultyButtons.forEach(button => {
         button.addEventListener('click', () => {
+            playClickSound(); // Play click sound on difficulty button
             const difficulty = button.getAttribute('data-difficulty');
             startGameWithDifficulty(difficulty);
         });
@@ -670,4 +675,42 @@ function initGame() {
 }
 
 // Start the game when page loads
-window.addEventListener('load', initGame);
+window.addEventListener('load', () => {
+    initGame();
+    // Play background music on page load and keep it running
+    if (bgMusic.paused) {
+        bgMusic.currentTime = 0;
+        bgMusic.volume = 0.5;
+        bgMusic.play().catch(() => {});
+    }
+});
+
+// Audio elements
+const bgMusic = document.getElementById('bgMusic');
+const waterSound = document.getElementById('waterSound');
+const errorSound = document.getElementById('errorSound');
+const clickSound = document.getElementById('clickSound');
+
+// Set volume for sound effects
+bgMusic.volume = 0.5;
+waterSound.volume = 0.18; // Softer water droplet
+errorSound.volume = 0.18; // Softer error sound
+clickSound.volume = 0.32;
+
+// Play click sound
+function playClickSound() {
+    clickSound.currentTime = 0;
+    clickSound.play();
+}
+
+// Play water droplet sound
+function playWaterSound() {
+    waterSound.currentTime = 0;
+    waterSound.play();
+}
+
+// Play error sound
+function playErrorSound() {
+    errorSound.currentTime = 0;
+    errorSound.play();
+}

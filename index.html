@@ -46,8 +46,17 @@
         <div id="controls">
             <button id="jumpBtn">JUMP</button>
             <div id="charity">
-                <span class="icon">⚠️</span>
-                <span>charity: water</span>
+                <a href="https://www.charitywater.org/" class="charitywater-pill" target="_blank" rel="noopener noreferrer">
+                    <span class="jug-logo-svg" aria-label="charity: water logo">
+                        <!-- SVG Water Jug Icon -->
+                        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="4" width="16" height="14" rx="5" fill="#FFC907" stroke="#FFC907" stroke-width="2"/>
+                            <rect x="8" y="2" width="6" height="4" rx="2" fill="#FFC907" stroke="#FFC907" stroke-width="2"/>
+                            <path d="M7 8L15 16M15 8L7 16" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </span>
+                    <span class="charitywater-pill-text">charity: water</span>
+                </a>
                 <span class="supporter">SUPPORTER</span>
             </div>
         </div>
@@ -61,7 +70,27 @@
             </div>
         </div>
     </div>
-    
+    <footer id="footer">
+        <div class="footer-content">
+            <span>Support clean water for all: </span>
+            <a href="https://www.charitywater.org/" class="charitywater-pill" target="_blank" rel="noopener noreferrer">
+                <span class="jug-logo-svg" aria-label="charity: water logo">
+                    <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="3" y="4" width="16" height="14" rx="5" fill="#FFC907" stroke="#FFC907" stroke-width="2"/>
+                        <rect x="8" y="2" width="6" height="4" rx="2" fill="#FFC907" stroke="#FFC907" stroke-width="2"/>
+                        <path d="M7 8L15 16M15 8L7 16" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </span>
+                <span class="charitywater-pill-text">charity: water</span>
+            </a>
+            <span> | </span>
+            <a href="https://www.charitywater.org/donate" target="_blank" rel="noopener noreferrer">Donate Now</a>
+        </div>
+    </footer>
+    <audio id="bgMusic" src="audio/ethereal-night-loop-274337.mp3" preload="auto" loop></audio>
+    <audio id="waterSound" src="audio/water-droplet-4-165639.mp3" preload="auto"></audio>
+    <audio id="errorSound" src="audio/error-011-352286.mp3" preload="auto"></audio>
+    <audio id="clickSound" src="audio/click-tap-computer-mouse-352734.mp3" preload="auto"></audio>
     <script src="main.js"></script>
 </body>
 </html>

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Georgia:wght@400;700&family=Playfair+Display:wght@400;700&display=swap');
+
 * {
     margin: 0;
     padding: 0;
@@ -5,7 +7,7 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Playfair Display', 'Georgia', serif;
     background: #003366;
     overflow: hidden;
     height: 100vh;
@@ -362,6 +364,127 @@ body {
     100% { transform: scale(1); opacity: 1; }
 }
 
+/* Footer Styling */
+#footer {
+    width: 100vw;
+    background: #002244;
+    color: #fff;
+    text-align: center;
+    padding: 18px 0 12px 0;
+    font-size: 18px;
+    letter-spacing: 1px;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    z-index: 3000;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.25);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+#footer a {
+    color: #00BFFF;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.15s;
+}
+#footer a:hover {
+    color: #FFC907;
+    text-decoration: underline;
+}
+
+/* Charity Water Link Styling */
+.charitywater-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    font-family: 'Georgia', serif;
+    font-size: 1.15em;
+    letter-spacing: 0.08em;
+    color: #222;
+    font-weight: 500;
+    transition: color 0.15s;
+}
+.charitywater-link:hover .charitywater-text {
+    color: #FFC907;
+    text-decoration: underline;
+}
+.charitywater-text {
+    color: #222;
+    font-family: 'Georgia', serif;
+    font-size: 1.15em;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    transition: color 0.15s;
+}
+.jug-logo-placeholder {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    background: #FFC907;
+    border-radius: 5px;
+    margin-right: 2px;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.10);
+}
+/* Optionally, add a simple jug icon placeholder (can be replaced with SVG or image) */
+.jug-logo-placeholder::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 7px;
+    top: 5px;
+    width: 10px;
+    height: 14px;
+    border: 2px solid #fff;
+    border-radius: 2px;
+}
+
+.charitywater-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border-radius: 999px;
+    padding: 6px 18px 6px 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+    border: 2px solid #FFC907;
+    text-decoration: none;
+    font-family: 'Georgia', serif;
+    font-size: 1.15em;
+    font-weight: 500;
+    color: #222;
+    transition: background 0.15s, border 0.15s;
+    cursor: pointer;
+}
+.charitywater-pill:hover {
+    background: #FFF8E1;
+    border-color: #FFD700;
+}
+.jug-logo-svg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    margin-right: 2px;
+}
+.charitywater-pill-text {
+    color: #222;
+    font-family: 'Georgia', serif;
+    font-size: 1.15em;
+    letter-spacing: 0.08em;
+    font-weight: 500;
+    transition: color 0.15s;
+}
+
 /* Responsive design */
 @media (max-width: 1300px) {
     #gameContainer {
@@ -416,5 +539,13 @@ body {
     }
     .diffTitle {
         font-size: 20px;
+    }
+    #footer {
+        font-size: 14px;
+        padding: 10px 0 8px 0;
+    }
+    .footer-content {
+        flex-direction: column;
+        gap: 4px;
     }
 }
