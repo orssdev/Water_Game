@@ -6,7 +6,7 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: #18191a;
+    background: #003366;
     overflow: hidden;
     height: 100vh;
     display: flex;
@@ -21,7 +21,7 @@ body {
     height: 700px;
     max-height: 98vh;
     margin: auto;
-    background: #23272b;
+    background: #004080;
     border-radius: 24px;
     box-shadow: 0 8px 32px rgba(0,0,0,0.45);
     display: flex;
@@ -48,36 +48,36 @@ body {
 }
 
 #gameUI div {
-    background: rgba(30, 30, 30, 0.85);
+    background: rgba(0, 51, 102, 0.95);
     padding: 12px 20px;
     border-radius: 12px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: 2px solid #FFC907;
     box-shadow: 0 4px 15px rgba(0,0,0,0.4);
     backdrop-filter: blur(5px);
 }
 
 #lives {
-    background: rgba(255, 107, 107, 0.9) !important;
-    border-color: rgba(255, 255, 255, 0.4) !important;
+    background: rgba(255, 99, 71, 0.95) !important;
+    border-color: #FFC907 !important;
 }
 
 #score {
-    background: rgba(78, 205, 196, 0.9) !important;
-    border-color: rgba(255, 255, 255, 0.4) !important;
+    background: rgba(0, 191, 255, 0.95) !important;
+    border-color: #FFC907 !important;
 }
 
 #instructions {
     position: absolute;
     top: 110px;
     left: 60px;
-    color: #e0e0e0;
+    color: #ffffff;
     font-size: 20px;
     z-index: 10;
-    background: rgba(30, 30, 30, 0.9);
+    background: rgba(0, 51, 102, 0.95);
     padding: 16px 24px;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-    border: 2px solid rgba(255, 255, 255, 0.15);
+    border: 2px solid #FFC907;
     backdrop-filter: blur(8px);
     line-height: 1.6;
     letter-spacing: 0.5px;
@@ -93,7 +93,7 @@ body {
 }
 
 #gameCanvas {
-    background: linear-gradient(180deg, #23272b 0%, #6BBF59 60%, #4A934A 100%);
+    background: linear-gradient(180deg, #87CEEB 0%, #00BFFF 30%, #4682B4 100%);
     display: block;
     margin: 0 auto;
     border-radius: 16px;
@@ -116,9 +116,9 @@ body {
 }
 
 #jumpBtn {
-    background: #333;
-    color: white;
-    border: 3px solid white;
+    background: #FFC907;
+    color: #003366;
+    border: 3px solid #ffffff;
     border-radius: 50px;
     padding: 15px 40px;
     font-size: 24px;
@@ -128,21 +128,21 @@ body {
     user-select: none;
     -webkit-user-select: none;
     -webkit-tap-highlight-color: transparent;
-    box-shadow: 0 2px 8px #0006;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     touch-action: manipulation; /* Prevent zoom delay on mobile */
 }
 
 #jumpBtn:hover {
-    background: #555;
+    background: #FFD700;
 }
 
 #jumpBtn:active {
-    background: #222;
+    background: #E6B800;
     transform: scale(0.98); /* Reduced scale for faster animation */
 }
 
 #charity {
-    background: #23272b;
+    background: #003366;
     color: #FFF;
     padding: 12px 20px;
     border-radius: 8px;
@@ -150,22 +150,25 @@ body {
     align-items: center;
     gap: 8px;
     font-size: 14px;
-    box-shadow: 0 2px 8px #0003;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    border: 2px solid #FFC907;
 }
 
 #charity .icon {
-    background: #FFD700;
-    color: #333;
+    background: #FFC907;
+    color: #003366;
     padding: 4px 6px;
     border-radius: 4px;
     font-weight: bold;
 }
 
 #charity .supporter {
-    background: #666;
+    background: #00BFFF;
+    color: #003366;
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 12px;
+    font-weight: bold;
 }
 
 /* Responsive design */

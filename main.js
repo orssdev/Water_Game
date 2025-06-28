@@ -413,57 +413,65 @@ function gameOver() {
     document.getElementById('instructions').style.display = 'none';
     document.getElementById('controls').style.display = 'none';
     
-    // Draw semi-transparent overlay
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
+    // Draw completely opaque overlay to block background
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.95)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
     // Draw background box for game over content
-    const boxWidth = 500;
-    const boxHeight = 280;
+    const boxWidth = 550;
+    const boxHeight = 320;
     const boxX = (canvas.width - boxWidth) / 2;
     const boxY = (canvas.height - boxHeight) / 2;
     
+    // Outer glow effect
+    ctx.fillStyle = 'rgba(255, 201, 7, 0.2)';
+    ctx.fillRect(boxX - 10, boxY - 10, boxWidth + 20, boxHeight + 20);
+    
     // Background box with rounded corners effect
-    ctx.fillStyle = 'rgba(35, 39, 43, 0.95)';
+    ctx.fillStyle = 'rgba(0, 51, 102, 0.98)';
     ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
     
-    // Border for the box
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-    ctx.lineWidth = 2;
+    // Multiple borders for depth
+    ctx.strokeStyle = '#FFC907';
+    ctx.lineWidth = 4;
     ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
     
-    // Inner shadow effect
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(boxX + 5, boxY + 5, boxWidth - 10, boxHeight - 10);
+    
+    // Inner shadow effect - stronger
     ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-    ctx.fillRect(boxX + 2, boxY + 2, boxWidth - 4, boxHeight - 4);
+    ctx.fillRect(boxX + 3, boxY + 3, boxWidth - 6, boxHeight - 6);
     
-    // Main content background
-    ctx.fillStyle = 'rgba(45, 49, 53, 0.9)';
-    ctx.fillRect(boxX + 8, boxY + 8, boxWidth - 16, boxHeight - 16);
+    // Main content background - much more opaque
+    ctx.fillStyle = 'rgba(0, 64, 128, 0.95)';
+    ctx.fillRect(boxX + 10, boxY + 10, boxWidth - 20, boxHeight - 20);
     
-    // Game over text with better spacing
-    ctx.fillStyle = '#ff6b6b';
-    ctx.font = 'bold 52px Arial';
+    // Game over text with better spacing and contrast
+    ctx.fillStyle = '#FFC907';
+    ctx.font = 'bold 56px Arial';
     ctx.textAlign = 'center';
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
-    ctx.strokeText('GAME OVER', canvas.width / 2, boxY + 80);
-    ctx.fillText('GAME OVER', canvas.width / 2, boxY + 80);
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = 'rgba(0, 51, 102, 0.9)';
+    ctx.strokeText('GAME OVER', canvas.width / 2, boxY + 90);
+    ctx.fillText('GAME OVER', canvas.width / 2, boxY + 90);
     
     // Score text with better spacing and styling
-    ctx.fillStyle = '#4ecdc4';
-    ctx.font = 'bold 28px Arial';
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
-    ctx.lineWidth = 2;
-    ctx.strokeText(`Final Score: ${gameState.score}`, canvas.width / 2, boxY + 140);
-    ctx.fillText(`Final Score: ${gameState.score}`, canvas.width / 2, boxY + 140);
+    ctx.fillStyle = '#00BFFF';
+    ctx.font = 'bold 32px Arial';
+    ctx.strokeStyle = 'rgba(0, 51, 102, 0.8)';
+    ctx.lineWidth = 3;
+    ctx.strokeText(`Final Score: ${gameState.score}`, canvas.width / 2, boxY + 160);
+    ctx.fillText(`Final Score: ${gameState.score}`, canvas.width / 2, boxY + 160);
     
-    // Instructions text
-    ctx.fillStyle = '#e0e0e0';
-    ctx.font = '20px Arial';
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
-    ctx.lineWidth = 1;
-    ctx.strokeText('Click the button below to play again', canvas.width / 2, boxY + 180);
-    ctx.fillText('Click the button below to play again', canvas.width / 2, boxY + 180);
+    // Instructions text with better contrast
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 22px Arial';
+    ctx.strokeStyle = 'rgba(0, 51, 102, 0.8)';
+    ctx.lineWidth = 2;
+    ctx.strokeText('Click the button below to play again', canvas.width / 2, boxY + 210);
+    ctx.fillText('Click the button below to play again', canvas.width / 2, boxY + 210);
     
     // Show reset button
     showResetButton();
@@ -498,15 +506,15 @@ function showResetButton() {
         resetBtn.textContent = 'PLAY AGAIN';
         resetBtn.style.cssText = `
             position: absolute;
-            top: 62%;
+            top: 68%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            color: white;
-            border: 3px solid white;
+            background: linear-gradient(135deg, #FFC907, #FFD700);
+            color: #003366;
+            border: 4px solid white;
             border-radius: 50px;
-            padding: 18px 45px;
-            font-size: 26px;
+            padding: 20px 50px;
+            font-size: 28px;
             font-weight: bold;
             cursor: pointer;
             z-index: 9999;
@@ -515,30 +523,30 @@ function showResetButton() {
             -webkit-user-select: none;
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 4px 10px rgba(76, 175, 80, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 6px 15px rgba(255, 201, 7, 0.4);
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             pointer-events: auto;
         `;
         
         // Add hover and active states
         resetBtn.addEventListener('mouseenter', () => {
-            resetBtn.style.background = 'linear-gradient(135deg, #45a049, #3d8b40)';
+            resetBtn.style.background = 'linear-gradient(135deg, #FFD700, #FFED4E)';
             resetBtn.style.transform = 'translate(-50%, -50%) scale(1.05)';
             resetBtn.style.zIndex = '9999';
         });
         resetBtn.addEventListener('mouseleave', () => {
-            resetBtn.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+            resetBtn.style.background = 'linear-gradient(135deg, #FFC907, #FFD700)';
             resetBtn.style.transform = 'translate(-50%, -50%) scale(1)';
             resetBtn.style.zIndex = '9999';
         });
         resetBtn.addEventListener('mousedown', () => {
-            resetBtn.style.background = 'linear-gradient(135deg, #3d8b40, #2e7d32)';
+            resetBtn.style.background = 'linear-gradient(135deg, #E6B800, #FFC907)';
             resetBtn.style.transform = 'translate(-50%, -50%) scale(0.98)';
             resetBtn.style.zIndex = '9999';
         });
         resetBtn.addEventListener('mouseup', () => {
-            resetBtn.style.background = 'linear-gradient(135deg, #45a049, #3d8b40)';
+            resetBtn.style.background = 'linear-gradient(135deg, #FFD700, #FFED4E)';
             resetBtn.style.transform = 'translate(-50%, -50%) scale(1.05)';
             resetBtn.style.zIndex = '9999';
         });
