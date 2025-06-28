@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Water Game</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="gameUI">
+            <div id="lives">Lives: <span id="livesCount">5</span></div>
+            <div id="score">Score: <span id="scoreCount">0</span></div>
+        </div>
+        
+        <div id="instructions">
+            <div>Collect: 💧</div>
+            <div>Avoid the: 🛢️</div>
+        </div>
+        
+        <canvas id="gameCanvas" width="1200" height="600"></canvas>
+        
+        <div id="controls">
+            <button id="jumpBtn">JUMP</button>
+            <div id="charity">
+                <span class="icon">⚠️</span>
+                <span>charity: water</span>
+                <span class="supporter">SUPPORTER</span>
+            </div>
+        </div>
+    </div>
+    
+    <script src="main.js"></script>
+</body>
+</html>
