@@ -10,9 +10,30 @@
 </head>
 <body>
     <div id="gameContainer">
+        <div id="difficultyScreen">
+            <div id="difficultyCard">
+                <h2>Choose Difficulty</h2>
+                <div id="difficultyButtons">
+                    <button class="difficultyBtn" data-difficulty="easy">
+                        <span class="diffTitle">EASY</span>
+                        <span class="diffDesc">Slower speed, fewer oil drops</span>
+                    </button>
+                    <button class="difficultyBtn" data-difficulty="medium">
+                        <span class="diffTitle">MEDIUM</span>
+                        <span class="diffDesc">Normal speed, moderate oil drops</span>
+                    </button>
+                    <button class="difficultyBtn" data-difficulty="hard">
+                        <span class="diffTitle">HARD</span>
+                        <span class="diffDesc">Faster speed, more oil drops</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
         <div id="gameUI">
             <div id="lives">Lives: <span id="livesCount">5</span></div>
             <div id="score">Score: <span id="scoreCount">0</span></div>
+            <div id="difficulty">Difficulty: <span id="difficultyLevel">MEDIUM</span></div>
         </div>
         
         <div id="instructions">

@@ -4,12 +4,41 @@ const ctx = canvas.getContext('2d');
 const jumpBtn = document.getElementById('jumpBtn');
 const livesCount = document.getElementById('livesCount');
 const scoreCount = document.getElementById('scoreCount');
+const difficultyLevel = document.getElementById('difficultyLevel');
+
+// Difficulty settings
+const difficultySettings = {
+    easy: {
+        name: 'EASY',
+        gameSpeed: 2,
+        autoSpeed: 2,
+        oilFrequency: 0.2,
+        jumpPower: 20
+    },
+    medium: {
+        name: 'MEDIUM', 
+        gameSpeed: 3,
+        autoSpeed: 3,
+        oilFrequency: 0.4,
+        jumpPower: 18
+    },
+    hard: {
+        name: 'HARD',
+        gameSpeed: 4.5,
+        autoSpeed: 4.5,
+        oilFrequency: 0.7,
+        jumpPower: 16
+    }
+};
+
+let currentDifficulty = 'medium';
 
 // Game state
 let gameState = {
     lives: 5,
     score: 0,
-    gameRunning: true
+    gameRunning: false, // Start with game paused for difficulty selection
+    gameStarted: false
 };
 
 // Player object
@@ -21,8 +50,8 @@ const player = {
     velocityX: 0,
     velocityY: 0,
     speed: 3,
-    autoSpeed: 3, // Constant forward movement (now affects world scroll)
-    jumpPower: 18, // Increased for more responsive feel
+    autoSpeed: 3, // Will be set by difficulty
+    jumpPower: 18, // Will be set by difficulty
     onGround: false,
     color: '#8B4513',
     worldX: 200, // Actual world position
@@ -47,7 +76,7 @@ let oilDropCounter = 0;
 const minDropDistance = 120;
 const maxDropDistance = 250;
 const waterDropFrequency = 0.7; // Higher = more frequent
-const oilDropFrequency = 0.4; // Lower = less frequent
+let oilDropFrequency = 0.4; // Will be set by difficulty
 
 // Initialize platforms based on mockup
 function initializePlatforms() {
@@ -583,16 +612,12 @@ function resetGame() {
     // Hide reset button
     hideResetButton();
     
-    // Show UI elements again
-    document.getElementById('gameUI').style.display = 'flex';
-    document.getElementById('instructions').style.display = 'block';
-    document.getElementById('controls').style.display = 'flex';
-    
-    // Reset game state
+    // Reset game state (but don't start the game yet)
     gameState = {
         lives: 5,
         score: 0,
-        gameRunning: true
+        gameRunning: false,
+        gameStarted: false
     };
     
     // Reset player
@@ -622,28 +647,31 @@ function resetGame() {
     updateScore();
     updateLives();
     
-    // Clear canvas and restart game loop
+    // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    gameLoop();
+    
+    // Show difficulty selection for replay
+    showDifficultyScreen();
 }
 
 // Main game loop
 function gameLoop() {
-    if (!gameState.gameRunning) return;
-    
-    // Clear canvas
+    // Always clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Update game objects
-    updatePlayer();
+    // Only update and draw game objects if game is running
+    if (gameState.gameRunning) {
+        // Update game objects
+        updatePlayer();
+        
+        // Draw everything
+        drawPlatforms();
+        drawWaterDrops();
+        drawOilDrops();
+        drawPlayer();
+    }
     
-    // Draw everything
-    drawPlatforms();
-    drawWaterDrops();
-    drawOilDrops();
-    drawPlayer();
-    
-    // Continue loop
+    // Continue loop regardless of game state
     requestAnimationFrame(gameLoop);
 }
 
@@ -690,12 +718,114 @@ canvas.addEventListener('mousedown', (e) => {
     playerJump();
 });
 
+// Difficulty selection functions
+function setDifficulty(difficulty) {
+    currentDifficulty = difficulty;
+    const settings = difficultySettings[difficulty];
+    
+    // Update player settings based on difficulty
+    player.autoSpeed = settings.autoSpeed;
+    player.jumpPower = settings.jumpPower;
+    
+    // Update global settings
+    oilDropFrequency = settings.oilFrequency;
+    
+    // Update UI
+    difficultyLevel.textContent = settings.name;
+    
+    console.log(`Difficulty set to: ${settings.name}`);
+}
+
+function showDifficultyScreen() {
+    const difficultyScreen = document.getElementById('difficultyScreen');
+    const gameUI = document.getElementById('gameUI');
+    const instructions = document.getElementById('instructions');
+    const controls = document.getElementById('controls');
+    
+    difficultyScreen.classList.remove('hidden');
+    gameUI.style.display = 'none';
+    instructions.style.display = 'none';
+    controls.style.display = 'none';
+    
+    gameState.gameRunning = false;
+    gameState.gameStarted = false;
+}
+
+function hideDifficultyScreen() {
+    const difficultyScreen = document.getElementById('difficultyScreen');
+    const gameUI = document.getElementById('gameUI');
+    const instructions = document.getElementById('instructions');
+    const controls = document.getElementById('controls');
+    
+    difficultyScreen.classList.add('hidden');
+    gameUI.style.display = 'flex';
+    instructions.style.display = 'block';
+    controls.style.display = 'flex';
+}
+
+function startGameWithDifficulty(difficulty) {
+    setDifficulty(difficulty);
+    hideDifficultyScreen();
+    
+    // Reset game state without showing difficulty screen again
+    gameState = {
+        lives: 5,
+        score: 0,
+        gameRunning: true,
+        gameStarted: true
+    };
+    
+    // Reset player
+    player.x = 200;
+    player.y = 400;
+    player.velocityX = 0;
+    player.velocityY = 0;
+    player.onGround = false;
+    player.worldX = 200;
+    player.jumpRequested = false;
+    
+    // Reset drop generation
+    lastWaterDropX = 0;
+    lastOilDropX = 0;
+    waterDropCounter = 0;
+    oilDropCounter = 0;
+    
+    // Clear and reinitialize game objects
+    platforms = [];
+    waterDrops = [];
+    oilDrops = [];
+    
+    initializePlatforms();
+    initializeDrops();
+    
+    // Update UI
+    updateScore();
+    updateLives();
+    
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+// Add event listeners for difficulty buttons
+function setupDifficultyButtons() {
+    const difficultyButtons = document.querySelectorAll('.difficultyBtn');
+    difficultyButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const difficulty = button.getAttribute('data-difficulty');
+            startGameWithDifficulty(difficulty);
+        });
+    });
+}
+
 // Initialize and start game
 function initGame() {
+    setupDifficultyButtons();
+    setDifficulty('medium'); // Set default difficulty
     initializePlatforms();
     initializeDrops();
     updateScore();
     updateLives();
+    showDifficultyScreen(); // Show difficulty selection first
     gameLoop();
 }
 

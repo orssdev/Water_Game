@@ -41,7 +41,7 @@ body {
     padding: 0 60px;
     z-index: 10;
     color: #fff;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: bold;
     text-shadow: 0 3px 6px rgba(0,0,0,0.8);
     letter-spacing: 1px;
@@ -64,6 +64,12 @@ body {
 #score {
     background: rgba(0, 191, 255, 0.95) !important;
     border-color: #FFC907 !important;
+}
+
+#difficulty {
+    background: rgba(255, 201, 7, 0.95) !important;
+    color: #003366 !important;
+    border-color: #ffffff !important;
 }
 
 #instructions {
@@ -171,6 +177,87 @@ body {
     font-weight: bold;
 }
 
+/* Difficulty Selection Screen */
+#difficultyScreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 51, 102, 0.98);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#difficultyCard {
+    background: #004080;
+    border: 4px solid #FFC907;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    text-align: center;
+    max-width: 600px;
+    width: 90%;
+}
+
+#difficultyCard h2 {
+    color: #FFC907;
+    font-size: 36px;
+    margin-bottom: 30px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+#difficultyButtons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.difficultyBtn {
+    background: linear-gradient(135deg, #00BFFF, #4682B4);
+    color: white;
+    border: 3px solid #FFC907;
+    border-radius: 15px;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.difficultyBtn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #4682B4, #5A9BD4);
+}
+
+.difficultyBtn:active {
+    transform: scale(0.98);
+}
+
+.diffTitle {
+    font-size: 24px;
+    letter-spacing: 2px;
+}
+
+.diffDesc {
+    font-size: 14px;
+    opacity: 0.9;
+    font-weight: normal;
+}
+
+/* Hide difficulty screen when game starts */
+#difficultyScreen.hidden {
+    display: none;
+}
+
 /* Responsive design */
 @media (max-width: 1300px) {
     #gameContainer {
@@ -194,13 +281,15 @@ body {
 
 @media (max-width: 768px) {
     #gameUI {
-        font-size: 18px;
+        font-size: 16px;
         padding: 0 10px;
+        flex-wrap: wrap;
+        gap: 10px;
     }
     #instructions {
         font-size: 14px;
         left: 10px;
-        top: 60px;
+        top: 80px;
         padding: 6px 10px;
     }
     #controls {
@@ -209,5 +298,19 @@ body {
     #jumpBtn {
         font-size: 18px;
         padding: 12px 30px;
+    }
+    #difficultyCard {
+        padding: 20px;
+    }
+    #difficultyCard h2 {
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+    .difficultyBtn {
+        padding: 15px;
+        font-size: 16px;
+    }
+    .diffTitle {
+        font-size: 20px;
     }
 }
