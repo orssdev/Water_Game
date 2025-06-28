@@ -22,10 +22,11 @@ const player = {
     velocityY: 0,
     speed: 3,
     autoSpeed: 3, // Constant forward movement (now affects world scroll)
-    jumpPower: 15,
+    jumpPower: 18, // Increased for more responsive feel
     onGround: false,
     color: '#8B4513',
-    worldX: 200 // Actual world position
+    worldX: 200, // Actual world position
+    jumpRequested: false // Add jump buffer
 };
 
 // Game objects arrays
@@ -35,14 +36,18 @@ let oilDrops = [];
 let cameraX = 0; // Camera offset for scrolling
 
 // Game physics
-const gravity = 0.8;
+const gravity = 0.7; // Slightly reduced for better feel
 const friction = 0.85;
 
 // Drop generation variables
 let lastWaterDropX = 0;
 let lastOilDropX = 0;
-const minDropDistance = 150;
-const maxDropDistance = 300;
+let waterDropCounter = 0;
+let oilDropCounter = 0;
+const minDropDistance = 120;
+const maxDropDistance = 250;
+const waterDropFrequency = 0.7; // Higher = more frequent
+const oilDropFrequency = 0.4; // Lower = less frequent
 
 // Initialize platforms based on mockup
 function initializePlatforms() {
@@ -91,33 +96,60 @@ function initializeDrops() {
     waterDrops = [];
     oilDrops = [];
     
-    // Generate initial drops
-    for (let i = 0; i < 5; i++) {
+    // Generate initial drops with better spacing
+    for (let i = 0; i < 3; i++) {
         generateWaterDrop();
+    }
+    for (let i = 0; i < 2; i++) {
         generateOilDrop();
     }
 }
 
 // Generate water drops randomly
 function generateWaterDrop() {
-    const x = Math.max(lastWaterDropX + minDropDistance, player.worldX + 200) + Math.random() * maxDropDistance;
-    const y = Math.random() * 300 + 100; // Between y 100-400
+    const x = Math.max(lastWaterDropX + minDropDistance, player.worldX + 300) + Math.random() * maxDropDistance;
+    
+    // Better Y positioning - avoid extreme heights and ensure reachability
+    let y;
+    const nearbyPlatforms = platforms.filter(p => Math.abs(p.x - x) < 200 && !p.isGround);
+    
+    if (nearbyPlatforms.length > 0 && Math.random() < 0.6) {
+        // Position near a platform
+        const platform = nearbyPlatforms[Math.floor(Math.random() * nearbyPlatforms.length)];
+        y = platform.y - 40 - Math.random() * 60; // Above platform
+    } else {
+        // Random height but more reasonable range
+        y = Math.random() * 200 + 150; // Between y 150-350
+    }
     
     waterDrops.push({
         x: x,
-        y: y,
+        y: Math.max(50, y), // Don't spawn too high
         width: 30,
         height: 30,
         collected: false
     });
     
     lastWaterDropX = x;
+    waterDropCounter++;
 }
 
 // Generate oil drops randomly
 function generateOilDrop() {
-    const x = Math.max(lastOilDropX + minDropDistance, player.worldX + 200) + Math.random() * maxDropDistance;
-    const y = Math.random() * 300 + 100; // Between y 100-400
+    const x = Math.max(lastOilDropX + minDropDistance, player.worldX + 400) + Math.random() * maxDropDistance;
+    
+    // Oil drops spawn in more strategic locations
+    let y;
+    const nearbyPlatforms = platforms.filter(p => Math.abs(p.x - x) < 150 && !p.isGround);
+    
+    if (nearbyPlatforms.length > 0 && Math.random() < 0.8) {
+        // Position on or near platforms to create obstacles
+        const platform = nearbyPlatforms[Math.floor(Math.random() * nearbyPlatforms.length)];
+        y = platform.y - 35; // Just above platform
+    } else {
+        // Ground level or jump height
+        y = Math.random() < 0.5 ? 470 : (Math.random() * 150 + 200); // Ground or mid-air
+    }
     
     oilDrops.push({
         x: x,
@@ -128,23 +160,33 @@ function generateOilDrop() {
     });
     
     lastOilDropX = x;
+    oilDropCounter++;
 }
 
 // Generate new drops ahead of the player
 function generateNewDrops() {
-    // Generate water drops
-    if (lastWaterDropX < player.worldX + 1000) {
+    // Generate water drops more frequently
+    if (Math.random() < waterDropFrequency && lastWaterDropX < player.worldX + 800) {
         generateWaterDrop();
     }
     
-    // Generate oil drops
-    if (lastOilDropX < player.worldX + 1000) {
+    // Generate oil drops less frequently but strategically
+    if (Math.random() < oilDropFrequency && lastOilDropX < player.worldX + 1000) {
+        generateOilDrop();
+    }
+    
+    // Ensure minimum spawn rate - force spawn if too far behind
+    if (lastWaterDropX < player.worldX + 400) {
+        generateWaterDrop();
+    }
+    
+    if (lastOilDropX < player.worldX + 600) {
         generateOilDrop();
     }
     
     // Clean up old drops that are far behind
-    waterDrops = waterDrops.filter(drop => drop.x > player.worldX - 500);
-    oilDrops = oilDrops.filter(drop => drop.x > player.worldX - 500);
+    waterDrops = waterDrops.filter(drop => drop.x > player.worldX - 300);
+    oilDrops = oilDrops.filter(drop => drop.x > player.worldX - 300);
 }
 
 // Draw player
@@ -258,7 +300,9 @@ function updatePlayer() {
     player.y += player.velocityY;
     
     // Platform collision (using world coordinates for collision detection)
+    let wasOnGround = player.onGround;
     player.onGround = false;
+    
     platforms.forEach(platform => {
         const playerWorldBounds = {
             x: player.worldX,
@@ -273,9 +317,24 @@ function updatePlayer() {
                 player.y = platform.y - player.height;
                 player.velocityY = 0;
                 player.onGround = true;
+                
+                // Execute buffered jump immediately upon landing
+                if (player.jumpRequested) {
+                    player.velocityY = -player.jumpPower;
+                    player.onGround = false;
+                    player.jumpRequested = false;
+                }
             }
         }
     });
+    
+    // Clear jump request after a short time to prevent infinite buffering
+    if (player.jumpRequested && !wasOnGround && !player.onGround) {
+        // Clear after a few frames if still in air
+        setTimeout(() => {
+            player.jumpRequested = false;
+        }, 100);
+    }
     
     // Check water drop collection
     waterDrops.forEach(drop => {
@@ -324,9 +383,15 @@ function updatePlayer() {
 
 // Player jump
 function playerJump() {
-    if (player.onGround && gameState.gameRunning) {
-        player.velocityY = -player.jumpPower;
-        player.onGround = false;
+    if (gameState.gameRunning) {
+        if (player.onGround) {
+            // Immediate jump
+            player.velocityY = -player.jumpPower;
+            player.onGround = false;
+        } else {
+            // Jump buffering - allow jump request slightly before landing
+            player.jumpRequested = true;
+        }
     }
 }
 
@@ -378,11 +443,13 @@ function gameLoop() {
 // Event listeners
 jumpBtn.addEventListener('mousedown', (e) => {
     e.preventDefault();
+    e.stopPropagation();
     playerJump();
 });
 
 jumpBtn.addEventListener('touchstart', (e) => {
     e.preventDefault();
+    e.stopPropagation();
     playerJump();
 });
 
@@ -396,6 +463,7 @@ document.addEventListener('keydown', (e) => {
         case 'w':
         case 'W':
             e.preventDefault();
+            e.stopPropagation();
             playerJump();
             break;
     }
@@ -404,12 +472,14 @@ document.addEventListener('keydown', (e) => {
 // Touch controls for mobile - canvas touch
 canvas.addEventListener('touchstart', (e) => {
     e.preventDefault();
+    e.stopPropagation();
     playerJump();
 });
 
 // Mouse click on canvas
 canvas.addEventListener('mousedown', (e) => {
     e.preventDefault();
+    e.stopPropagation();
     playerJump();
 });
 
