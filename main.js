@@ -436,182 +436,29 @@ function updateLives() {
 // Game over
 function gameOver() {
     gameState.gameRunning = false;
-    
-    // Hide UI elements temporarily to show game over card
+    // Hide UI elements
     document.getElementById('gameUI').style.display = 'none';
     document.getElementById('instructions').style.display = 'none';
     document.getElementById('controls').style.display = 'none';
-    
-    // Draw completely opaque overlay to block background
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.95)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw background box for game over content
-    const boxWidth = 550;
-    const boxHeight = 320;
-    const boxX = (canvas.width - boxWidth) / 2;
-    const boxY = (canvas.height - boxHeight) / 2;
-    
-    // Outer glow effect
-    ctx.fillStyle = 'rgba(255, 201, 7, 0.2)';
-    ctx.fillRect(boxX - 10, boxY - 10, boxWidth + 20, boxHeight + 20);
-    
-    // Background box with rounded corners effect
-    ctx.fillStyle = 'rgba(0, 51, 102, 0.98)';
-    ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
-    
-    // Multiple borders for depth
-    ctx.strokeStyle = '#FFC907';
-    ctx.lineWidth = 4;
-    ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
-    
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(boxX + 5, boxY + 5, boxWidth - 10, boxHeight - 10);
-    
-    // Inner shadow effect - stronger
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-    ctx.fillRect(boxX + 3, boxY + 3, boxWidth - 6, boxHeight - 6);
-    
-    // Main content background - much more opaque
-    ctx.fillStyle = 'rgba(0, 64, 128, 0.95)';
-    ctx.fillRect(boxX + 10, boxY + 10, boxWidth - 20, boxHeight - 20);
-    
-    // Game over text with better spacing and contrast
-    ctx.fillStyle = '#FFC907';
-    ctx.font = 'bold 56px Arial';
-    ctx.textAlign = 'center';
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = 'rgba(0, 51, 102, 0.9)';
-    ctx.strokeText('GAME OVER', canvas.width / 2, boxY + 90);
-    ctx.fillText('GAME OVER', canvas.width / 2, boxY + 90);
-    
-    // Score text with better spacing and styling
-    ctx.fillStyle = '#00BFFF';
-    ctx.font = 'bold 32px Arial';
-    ctx.strokeStyle = 'rgba(0, 51, 102, 0.8)';
-    ctx.lineWidth = 3;
-    ctx.strokeText(`Final Score: ${gameState.score}`, canvas.width / 2, boxY + 160);
-    ctx.fillText(`Final Score: ${gameState.score}`, canvas.width / 2, boxY + 160);
-    
-    // Instructions text with better contrast
-    ctx.fillStyle = '#ffffff';
-    ctx.font = 'bold 22px Arial';
-    ctx.strokeStyle = 'rgba(0, 51, 102, 0.8)';
-    ctx.lineWidth = 2;
-    ctx.strokeText('Click the button below to play again', canvas.width / 2, boxY + 210);
-    ctx.fillText('Click the button below to play again', canvas.width / 2, boxY + 210);
-    
-    // Show reset button
-    showResetButton();
+    // Show game over screen
+    const gameOverScreen = document.getElementById('gameOverScreen');
+    gameOverScreen.style.display = 'flex';
+    // Update final score and difficulty
+    document.getElementById('finalScoreValue').textContent = gameState.score;
+    document.getElementById('finalDifficultyValue').textContent = difficultySettings[currentDifficulty].name;
 }
 
-// Show reset button
-function showResetButton() {
-    // Create game over overlay if it doesn't exist
-    let gameOverOverlay = document.getElementById('gameOverOverlay');
-    if (!gameOverOverlay) {
-        gameOverOverlay = document.createElement('div');
-        gameOverOverlay.id = 'gameOverOverlay';
-        gameOverOverlay.style.cssText = `
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.1);
-            z-index: 8888;
-            pointer-events: none;
-        `;
-        document.getElementById('gameContainer').appendChild(gameOverOverlay);
-    }
-    gameOverOverlay.style.display = 'block';
-    
-    // Create reset button if it doesn't exist
-    let resetBtn = document.getElementById('resetBtn');
-    if (!resetBtn) {
-        resetBtn = document.createElement('button');
-        resetBtn.id = 'resetBtn';
-        resetBtn.textContent = 'PLAY AGAIN';
-        resetBtn.style.cssText = `
-            position: absolute;
-            top: 68%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: linear-gradient(135deg, #FFC907, #FFD700);
-            color: #003366;
-            border: 4px solid white;
-            border-radius: 50px;
-            padding: 20px 50px;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 9999;
-            transition: none;
-            user-select: none;
-            -webkit-user-select: none;
-            -webkit-tap-highlight-color: transparent;
-            touch-action: manipulation;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6), 0 6px 15px rgba(255, 201, 7, 0.4);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-            letter-spacing: 2px;
-            pointer-events: auto;
-        `;
-        
-        // Add hover and active states
-        resetBtn.addEventListener('mouseenter', () => {
-            resetBtn.style.background = 'linear-gradient(135deg, #FFD700, #FFED4E)';
-            resetBtn.style.transform = 'translate(-50%, -50%) scale(1.05)';
-            resetBtn.style.zIndex = '9999';
-        });
-        resetBtn.addEventListener('mouseleave', () => {
-            resetBtn.style.background = 'linear-gradient(135deg, #FFC907, #FFD700)';
-            resetBtn.style.transform = 'translate(-50%, -50%) scale(1)';
-            resetBtn.style.zIndex = '9999';
-        });
-        resetBtn.addEventListener('mousedown', () => {
-            resetBtn.style.background = 'linear-gradient(135deg, #E6B800, #FFC907)';
-            resetBtn.style.transform = 'translate(-50%, -50%) scale(0.98)';
-            resetBtn.style.zIndex = '9999';
-        });
-        resetBtn.addEventListener('mouseup', () => {
-            resetBtn.style.background = 'linear-gradient(135deg, #FFD700, #FFED4E)';
-            resetBtn.style.transform = 'translate(-50%, -50%) scale(1.05)';
-            resetBtn.style.zIndex = '9999';
-        });
-        
-        // Add click event
-        resetBtn.addEventListener('click', resetGame);
-        resetBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            resetGame();
-        });
-        
-        document.getElementById('gameContainer').appendChild(resetBtn);
-    }
-    
-    resetBtn.style.display = 'block';
-    resetBtn.style.zIndex = '9999';
+// Wire up restart button
+const restartBtn = document.getElementById('restartBtn');
+if (restartBtn) {
+    restartBtn.onclick = resetGame;
 }
 
-// Hide reset button
-function hideResetButton() {
-    const resetBtn = document.getElementById('resetBtn');
-    if (resetBtn) {
-        resetBtn.style.display = 'none';
-    }
-    
-    const gameOverOverlay = document.getElementById('gameOverOverlay');
-    if (gameOverOverlay) {
-        gameOverOverlay.style.display = 'none';
-    }
-}
-
-// Reset game function
+// Update resetGame to hide game over screen and show difficulty
 function resetGame() {
-    // Hide reset button
-    hideResetButton();
-    
+    // Hide game over screen
+    const gameOverScreen = document.getElementById('gameOverScreen');
+    gameOverScreen.style.display = 'none';
     // Reset game state (but don't start the game yet)
     gameState = {
         lives: 5,
@@ -619,7 +466,6 @@ function resetGame() {
         gameRunning: false,
         gameStarted: false
     };
-    
     // Reset player
     player.x = 200;
     player.y = 400;
@@ -628,28 +474,22 @@ function resetGame() {
     player.onGround = false;
     player.worldX = 200;
     player.jumpRequested = false;
-    
     // Reset drop generation
     lastWaterDropX = 0;
     lastOilDropX = 0;
     waterDropCounter = 0;
     oilDropCounter = 0;
-    
     // Clear and reinitialize game objects
     platforms = [];
     waterDrops = [];
     oilDrops = [];
-    
     initializePlatforms();
     initializeDrops();
-    
     // Update UI
     updateScore();
     updateLives();
-    
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
     // Show difficulty selection for replay
     showDifficultyScreen();
 }
