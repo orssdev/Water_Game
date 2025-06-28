@@ -407,17 +407,216 @@ function updateLives() {
 // Game over
 function gameOver() {
     gameState.gameRunning = false;
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+    
+    // Hide UI elements temporarily to show game over card
+    document.getElementById('gameUI').style.display = 'none';
+    document.getElementById('instructions').style.display = 'none';
+    document.getElementById('controls').style.display = 'none';
+    
+    // Draw semi-transparent overlay
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.85)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    ctx.fillStyle = 'white';
-    ctx.font = '48px Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('GAME OVER', canvas.width / 2, canvas.height / 2 - 50);
+    // Draw background box for game over content
+    const boxWidth = 500;
+    const boxHeight = 280;
+    const boxX = (canvas.width - boxWidth) / 2;
+    const boxY = (canvas.height - boxHeight) / 2;
     
-    ctx.font = '24px Arial';
-    ctx.fillText(`Final Score: ${gameState.score}`, canvas.width / 2, canvas.height / 2 + 20);
-    ctx.fillText('Refresh to play again', canvas.width / 2, canvas.height / 2 + 60);
+    // Background box with rounded corners effect
+    ctx.fillStyle = 'rgba(35, 39, 43, 0.95)';
+    ctx.fillRect(boxX, boxY, boxWidth, boxHeight);
+    
+    // Border for the box
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(boxX, boxY, boxWidth, boxHeight);
+    
+    // Inner shadow effect
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+    ctx.fillRect(boxX + 2, boxY + 2, boxWidth - 4, boxHeight - 4);
+    
+    // Main content background
+    ctx.fillStyle = 'rgba(45, 49, 53, 0.9)';
+    ctx.fillRect(boxX + 8, boxY + 8, boxWidth - 16, boxHeight - 16);
+    
+    // Game over text with better spacing
+    ctx.fillStyle = '#ff6b6b';
+    ctx.font = 'bold 52px Arial';
+    ctx.textAlign = 'center';
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.8)';
+    ctx.strokeText('GAME OVER', canvas.width / 2, boxY + 80);
+    ctx.fillText('GAME OVER', canvas.width / 2, boxY + 80);
+    
+    // Score text with better spacing and styling
+    ctx.fillStyle = '#4ecdc4';
+    ctx.font = 'bold 28px Arial';
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
+    ctx.lineWidth = 2;
+    ctx.strokeText(`Final Score: ${gameState.score}`, canvas.width / 2, boxY + 140);
+    ctx.fillText(`Final Score: ${gameState.score}`, canvas.width / 2, boxY + 140);
+    
+    // Instructions text
+    ctx.fillStyle = '#e0e0e0';
+    ctx.font = '20px Arial';
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+    ctx.lineWidth = 1;
+    ctx.strokeText('Click the button below to play again', canvas.width / 2, boxY + 180);
+    ctx.fillText('Click the button below to play again', canvas.width / 2, boxY + 180);
+    
+    // Show reset button
+    showResetButton();
+}
+
+// Show reset button
+function showResetButton() {
+    // Create game over overlay if it doesn't exist
+    let gameOverOverlay = document.getElementById('gameOverOverlay');
+    if (!gameOverOverlay) {
+        gameOverOverlay = document.createElement('div');
+        gameOverOverlay.id = 'gameOverOverlay';
+        gameOverOverlay.style.cssText = `
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.1);
+            z-index: 8888;
+            pointer-events: none;
+        `;
+        document.getElementById('gameContainer').appendChild(gameOverOverlay);
+    }
+    gameOverOverlay.style.display = 'block';
+    
+    // Create reset button if it doesn't exist
+    let resetBtn = document.getElementById('resetBtn');
+    if (!resetBtn) {
+        resetBtn = document.createElement('button');
+        resetBtn.id = 'resetBtn';
+        resetBtn.textContent = 'PLAY AGAIN';
+        resetBtn.style.cssText = `
+            position: absolute;
+            top: 62%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #4CAF50, #45a049);
+            color: white;
+            border: 3px solid white;
+            border-radius: 50px;
+            padding: 18px 45px;
+            font-size: 26px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 9999;
+            transition: none;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4), 0 4px 10px rgba(76, 175, 80, 0.3);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 1px;
+            pointer-events: auto;
+        `;
+        
+        // Add hover and active states
+        resetBtn.addEventListener('mouseenter', () => {
+            resetBtn.style.background = 'linear-gradient(135deg, #45a049, #3d8b40)';
+            resetBtn.style.transform = 'translate(-50%, -50%) scale(1.05)';
+            resetBtn.style.zIndex = '9999';
+        });
+        resetBtn.addEventListener('mouseleave', () => {
+            resetBtn.style.background = 'linear-gradient(135deg, #4CAF50, #45a049)';
+            resetBtn.style.transform = 'translate(-50%, -50%) scale(1)';
+            resetBtn.style.zIndex = '9999';
+        });
+        resetBtn.addEventListener('mousedown', () => {
+            resetBtn.style.background = 'linear-gradient(135deg, #3d8b40, #2e7d32)';
+            resetBtn.style.transform = 'translate(-50%, -50%) scale(0.98)';
+            resetBtn.style.zIndex = '9999';
+        });
+        resetBtn.addEventListener('mouseup', () => {
+            resetBtn.style.background = 'linear-gradient(135deg, #45a049, #3d8b40)';
+            resetBtn.style.transform = 'translate(-50%, -50%) scale(1.05)';
+            resetBtn.style.zIndex = '9999';
+        });
+        
+        // Add click event
+        resetBtn.addEventListener('click', resetGame);
+        resetBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            resetGame();
+        });
+        
+        document.getElementById('gameContainer').appendChild(resetBtn);
+    }
+    
+    resetBtn.style.display = 'block';
+    resetBtn.style.zIndex = '9999';
+}
+
+// Hide reset button
+function hideResetButton() {
+    const resetBtn = document.getElementById('resetBtn');
+    if (resetBtn) {
+        resetBtn.style.display = 'none';
+    }
+    
+    const gameOverOverlay = document.getElementById('gameOverOverlay');
+    if (gameOverOverlay) {
+        gameOverOverlay.style.display = 'none';
+    }
+}
+
+// Reset game function
+function resetGame() {
+    // Hide reset button
+    hideResetButton();
+    
+    // Show UI elements again
+    document.getElementById('gameUI').style.display = 'flex';
+    document.getElementById('instructions').style.display = 'block';
+    document.getElementById('controls').style.display = 'flex';
+    
+    // Reset game state
+    gameState = {
+        lives: 5,
+        score: 0,
+        gameRunning: true
+    };
+    
+    // Reset player
+    player.x = 200;
+    player.y = 400;
+    player.velocityX = 0;
+    player.velocityY = 0;
+    player.onGround = false;
+    player.worldX = 200;
+    player.jumpRequested = false;
+    
+    // Reset drop generation
+    lastWaterDropX = 0;
+    lastOilDropX = 0;
+    waterDropCounter = 0;
+    oilDropCounter = 0;
+    
+    // Clear and reinitialize game objects
+    platforms = [];
+    waterDrops = [];
+    oilDrops = [];
+    
+    initializePlatforms();
+    initializeDrops();
+    
+    // Update UI
+    updateScore();
+    updateLives();
+    
+    // Clear canvas and restart game loop
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    gameLoop();
 }
 
 // Main game loop
